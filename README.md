@@ -1,4 +1,4 @@
-# CSI4107 - Assignment 1: Information Retrieval System
+# CSI4107 - Assignment 2: Neural Information Retrieval System
 
 ## Important Notes on Code Structure
 For simplicity, the three main steps of the system can be found in the following scripts:
@@ -17,41 +17,22 @@ Other helper methods in the repository assist with retrieving insights, analyzin
 ## Contributions
 
 Fatima Ghadbawi
-- Step 1 (Preprocessing): Developed the text preprocessing pipeline, including tokenization, stopword removal, stemming, and text cleaning.
-- Processed the SciFact dataset and structured it into preprocessed_corpus.jsonl for indexing.
-- Extracted the total vocabulary size and generated a sample of 100 tokens for reporting.
-- Explained the algorithms, data structures, and optimizations used in preprocessing, indexing, and retrieval.
-- Report Sections: #4, #5
 
 Rina Osman
-- Step 2 (Indexing): Built the inverted index and structured it for efficient document retrieval.
-- Step 3 (Retrieval & Ranking): Implemented cosine similarity to rank documents based on relevance to queries.
-- Processed and formatted the system output into Results.txt in TREC format.
-- Debugged for trec eval
-- Compared retrieval effectiveness between title-only and full-text queries.
-- Report Sections: #3, #6, #7, #8
-
 
 Uvil Dahanayake
-- Ran trec_eval to compute Mean Average Precision (MAP) and analyzed evaluation metrics.
-- Assisted in comparing retrieval performance for different query modes.
-- Contributed to writing and structuring key report sections.
-- Wrote sections for Introduction, Functionality of the Program, Query Results & Discussion, and Mean Average Precision (MAP) Score.
-- Report Sections: #1, #2
 
 ---
 
 ## 1. Introduction
 
-- This project aims to build a simple information retrieval system that can search a given collection of documents, in our case a collection provided by Scifact, and return a list of related documents each with its own ranking and score.
+- Description
 
 ---
 
 ## 2. Functionality of the Program
 
-- The first stage is preprocessing in which our program goes through each document removing and formatting text in a way that makes it easier to search through and create a more meaningful index. We removed punctuation, numbers, and stopwords while also using the Porter stemmer to normalize similar words that have different inflexional endings before finally saving the processed corpus. 
-- We then move on to indexing where we go through each of the preprocessed documents and add tokens to our inverted index with the document ID in which they appear. 
-- With our inverted index made we can now retrieve related documents and assign them a score based on cosine similarity.
+- Description
 
 ---
 
@@ -64,11 +45,8 @@ Ensure you have Python 3.8+ installed. Then, install all required dependencies:
 
 The required dependencies include:  
 - `nltk` (for text preprocessing)  
-- `numpy` (for numerical operations)  
-- `scipy` (for cosine similarity calculations)  
-- `sklearn` (for TF-IDF vectorization)  
-- `jsonlines` (for handling `.jsonl` files)  
-- `pandas` (for handling tabular data)  
+- `numpy` (for numerical operations)
+- etc ...
 
 ### 3.2 Preprocess the Corpus
 Preprocessing extracts, tokenizes, and cleans the text data, then saves it as preprocessed_corpus.jsonl.
@@ -160,30 +138,12 @@ To efficiently retrieve relevant documents, we constructed an **inverted index**
 }
 ```
 
-**Optimizations:**
-✔ **Uses `defaultdict(set)` to prevent missing keys and speed up insertions.**  
-✔ **Stores document IDs in sets first to remove duplicates before converting to lists.**  
-✔ **Processes documents one-by-one to minimize memory usage.**
 
 ---
 
 ### **Retrieval & Ranking**
-We implemented **TF-IDF weighting combined with cosine similarity** to rank documents based on their relevance to a given query.
+- Description
 
-- **TF-IDF Vectorization**:
-  - We used `TfidfVectorizer()` from `sklearn` to convert both **documents and queries into numerical vectors**.
-  - **TF-IDF (Term Frequency-Inverse Document Frequency)** helps assign importance to terms based on their frequency in a document vs. the entire corpus.
-
-- **Cosine Similarity Calculation**:
-  - Queries are **transformed into TF-IDF vectors**.
-  - **Cosine similarity** is computed between each query vector and all document vectors.
-  - Documents are **ranked in descending order** based on their similarity scores.
-
-- **Ranking Algorithm**:
-  1. **Convert the query to a TF-IDF vector** using the same vectorizer as the documents.
-  2. **Compute cosine similarity** between the query and all document vectors.
-  3. **Sort the results by similarity score** in descending order.
-  4. **Return the top 100 documents** for evaluation.
 
 - **Output Format**:
 ```plaintext
@@ -257,6 +217,7 @@ Query ID: 3
 
 ## 7. Mean Average Precision (MAP) Score
 
+### Assignment 1 scores: 
 The Mean Average Precision (MAP) score was computed using trec_eval for different retrieval approaches:
 
 - Title-Only Retrieval → 0.9585
@@ -271,11 +232,10 @@ Observations:
 
 ✅ The MAP computation results can be found at: results/trec-map-result.png.
 
+
+### Assignment 2 scores: 
+
 ---
 
 ## 8. Conclusion
-In this assignment, we built an **Information Retrieval (IR) system** using the **vector space model**, with **TF-IDF weighting and cosine similarity** to rank documents from the SciFact dataset. Our **preprocessing pipeline** helped clean and organize the text by applying **tokenization, stopword removal, and stemming**, making indexing and retrieval more efficient. The **inverted index** allowed for fast lookups, and our **retrieval module** showed how different query methods (title only vs. full text) affected results.  
-
-From our evaluation, we found that full-text retrieval ranked more relevant documents higher, improving recall but sometimes lowering precision. The Mean Average Precision (MAP) scores confirmed this, showing a balance between precision and recall. While our system performed well, there is room for improvement, such as using BM25 for better ranking, query expansion to improve recall, and incorporating synonyms or domain-specific terms.
-
-Overall, this project gave us a hands-on understanding of **search algorithms, ranking strategies, and the real-world challenges of information retrieval**, making it a great learning experience.
+- Description
