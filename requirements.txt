@@ -1,0 +1,6 @@
+pandas
+nltk
+numpy
+scipy
+scikit-learn
+jsonlines
