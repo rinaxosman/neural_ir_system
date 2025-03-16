@@ -4,3 +4,8 @@ numpy
 scipy
 scikit-learn
 jsonlines
+beir 
+torch 
+transformers 
+sentence-transformers 
+faiss-cpu

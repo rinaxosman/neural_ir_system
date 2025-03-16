@@ -19,6 +19,8 @@ Other helper methods in the repository assist with retrieving insights, analyzin
 Fatima Ghadbawi
 
 Rina Osman
+- Model 1: Sentence-BERT
+- bertneural.py
 
 Uvil Dahanayake
 
@@ -26,9 +28,11 @@ Uvil Dahanayake
 
 ## 1. Introduction
 
-- Description
+- In this assignment, we implemented an improved version of the Information Retrieval (IR) system from Assignment 1, focusing on neural information retrieval methods. We explored transformer-based retrieval models such as BERT-based models and Sentence-BERT (SBERT) to enhance retrieval effectiveness. The objective was to obtain improved evaluation scores using advanced neural models compared to the classical TF-IDF and exact match retrieval methods from Assignment 1.
 
 ---
+##
+
 
 ## 2. Functionality of the Program
 
