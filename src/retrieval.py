@@ -116,4 +116,4 @@ with open(results_title_path, "w", encoding="utf-8") as f:
 with open(results_text_path, "w", encoding="utf-8") as f:
     f.write("\n".join(all_results_text) + "\n")
 
-print(f"✅ Results saved to {results_title_path} and {results_text_path}")
+print(f" Results saved to {results_title_path} and {results_text_path}")

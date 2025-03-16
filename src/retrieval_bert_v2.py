@@ -62,7 +62,7 @@ def retrieve_and_rank_bert(query, query_id, run_name, corpus_doc_ids, corpus_emb
 
     ranked_docs = sorted(zip(corpus_doc_ids, similarities), key=lambda x: x[1], reverse=True)[:top_k]
 
-    results = {str(doc_id): float(score) for doc_id, score in ranked_docs}  # ✅ Ensure values are float
+    results = {str(doc_id): int(score) for doc_id, score in ranked_docs}  # ✅ Ensure values are float
     formatted_results = [
         f"{query_id} Q0 {doc_id} {rank} {score:.4f} {run_name}"
         for rank, (doc_id, score) in enumerate(ranked_docs, start=1)
