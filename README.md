@@ -4,6 +4,7 @@
 For simplicity, the system can be found in the following script:
 
 - retrieval_bert.py
+
         - Output: results/results_both_bert.txt
         - Output: results/results_title_bert.txt
         - Output: results/results_text_bert.txt
@@ -158,8 +159,15 @@ The Mean Average Precision (MAP) score was computed using trec_eval for differen
 - MAP → 0.9585
 - P@10 → 
 
-### Assignment 2 scores: 
+### Assignment 2 scores - Model 1 Bert : 
 
+- MAP → 
+- P@10 → 
+
+### Assignment 2 scores - Model 2 (name) : 
+
+- MAP → 
+- P@10 → 
 
 Observations:
 
