@@ -1,11 +1,12 @@
 # CSI4107 - Assignment 2: Neural Information Retrieval System
 
-## Important Notes on Code Structure
-For simplicity, the three main steps of the system can be found in the following scripts:
+## Important Note on Code Structure
+For simplicity, the system can be found in the following script:
 
-- Step 1 (Preprocessing) → src/preprocess.py (Output: data/scifact/preprocessed_corpus.json)
-- Step 2 (Indexing) → src/index.py (Output: data/scifact/inverted_index.json)
-- Step 3 (Retrieval & Ranking) → src/retrieval.py (Output: results/Results.txt)
+- retrieval_bert.py
+        - Output: results/results_both_bert.txt
+        - Output: results/results_title_bert.txt
+        - Output: results/results_text_bert.txt
 
 Other helper methods in the repository assist with retrieving insights, analyzing results, and evaluating performance.
 
@@ -19,8 +20,13 @@ Other helper methods in the repository assist with retrieving insights, analyzin
 Fatima Ghadbawi
 
 Rina Osman
-- Model 1: Sentence-BERT
-- bertneural.py
+- Developed Model 1: Sentence-BERT, which utilizes pre-trained BERT embeddings for document retrieval.
+- Implemented the retrieval pipeline in bertneural.py, ensuring efficient document ranking based on semantic similarity.
+    - Processed and evaluated retrieval results, storing them in:
+    - results/results_both_bert.txt
+    - results/results_title_bert.txt
+    - results/results_text_bert.txt
+- Designed and executed evaluation metrics (MAP, P@10) to compare BERT's performance with classical retrieval methods from A1.
 
 Uvil Dahanayake
 
@@ -53,97 +59,23 @@ The required dependencies include:
 - etc ...
 
 ### 3.2 Preprocess the Corpus
-Preprocessing extracts, tokenizes, and cleans the text data, then saves it as preprocessed_corpus.jsonl.
+Since this system relies on neural information retrieval methods, preprocessing is not required, due to its understading of 
 
-    python src/preprocess.py
+### 3.5 Evaluate Results
 
-✅ Expected Output:
-data/scifact/preprocessed_corpus.jsonl
-
-### 3.3 Create the Inverted Index
-Indexing builds the inverted index, which is necessary for retrieval.
-
-    python src/index.py
-
-✅ Expected Output:
-data/scifact/inverted_index.json
-
-### 3.4 Run Document Retrieval and Ranking
-Retrieval runs the search system using two different query modes:
-
-Title-only retrieval (results_title.txt)
-Title + Full-text retrieval (results_text.txt)
-
-    python src/retrieval.py
-
-✅ Expected Output:
-- results/results_title.txt
-- results/results_text.txt
-
-The retrieval script: 
-
-- ✔ Loads the preprocessed corpus and inverted index
-- ✔ Selects all odd-numbered queries from test.tsv
-- ✔ Retrieves relevant documents using TF-IDF + Cosine Similarity
-- ✔ Outputs results in TREC format
-
-### 3.5 Evaluate Results using trec_eval
-To compute Mean Average Precision (MAP) and other evaluation metrics, run:
-
-    trec_eval data/scifact/qrels/test.tsv results/results_title.txt
-    trec_eval data/scifact/qrels/test.tsv results/results_text.txt
 
 This will output evaluation metrics such as:
 - Mean Average Precision (MAP)
-- Precision at different ranks
+- Precision at different ranks (1,10)
 - Recall scores
 
 ---
 
 ## 4. Algorithms, Data Structures, and Optimizations
 
-### **Preprocessing**
-For preprocessing, we implemented a pipeline that cleans and prepares the text for indexing and retrieval. The steps include:
-
-- **Tokenization**: We used `nltk.word_tokenize()` to split the text into individual words.
-- **Stopword Removal**: We used NLTK’s predefined list of English stopwords and also allowed for a custom stopword list to further filter out common words that do not contribute to meaningful retrieval.
-- **Lowercasing**: All text was converted to lowercase to ensure case-insensitive matching.
-- **Punctuation and Number Removal**: Using regex (`re.sub(r'[^\w\s]', '', text)`) to eliminate punctuation and numbers, ensuring only meaningful words are retained.
-- **Stemming**: We applied the **Porter Stemmer** to reduce words to their root forms (e.g., “running” → “run”). This helps normalize variations of the same word.
-- **Vocabulary Storage**: We stored unique words in a set to ensure an efficient lookup.
-
-**Optimizations:**
-✔ **Preprocessing is applied in a single pass** to improve efficiency.  
-✔ **Regex is used for fast text cleaning.**  
-✔ **Set operations** are used for stopword removal to speed up lookups.  
-✔ **Processes documents line-by-line** to handle large datasets efficiently.
-
----
-
-### **Indexing**
-To efficiently retrieve relevant documents, we constructed an **inverted index**, which maps terms to document IDs.
-
-- **Data Structure Used**: We implemented a **dictionary-based inverted index** (`defaultdict(set)`) where:
-  - **Key**: A word from the corpus (token)
-  - **Value**: A **set** of document IDs that contain the word.
-
-- **Indexing Algorithm**:
-  1. **Read the preprocessed corpus** from `preprocessed_corpus.json`.
-  2. **Extract tokens from each document** and associate them with their `doc_id`.
-  3. **Update the inverted index** by adding document IDs to the posting list for each token.
-  4. **Convert sets to lists** before saving the final index as `inverted_index.json` for efficient storage.
-
-- **Storage Format (JSON example)**:
-```json
-{
-    "brain": ["4983", "72159", "152245"],
-    "develop": ["4983", "106031"],
-    "function": ["4983", "116792"]
-}
-```
 
 
----
+
 
 ### **Retrieval & Ranking**
 - Description
@@ -178,66 +110,59 @@ Our final vocabulary consists of **30,980 unique tokens**, generated after token
 
     python src/top_2_sample.py
 
-### Top 10 Results for First 2 Queries (Title-Only Retrieval) vs (Title + Full Text Retrieval)
-- We displayed a sample of the top 5 each for simplicity, full results are found at 2_sample_queries.txt
+### Top 10 Results for First 2 Queries
+- Results are found at results/first_2_sample_queries.txt
 
-#### Title only
-Query ID: 1
-- 1 Q0 31715818 1 1.0000 run_31715818_title
-- 1 Q0 5415832 2 0.2493 run_31715818_title
-- 1 Q0 87430549 3 0.2121 run_31715818_title
-- 1 Q0 29321530 4 0.2110 run_31715818_title
-- 1 Q0 41782935 5 0.1914 run_31715818_title
+### Model 1: 
 
-Query ID: 3
-- 3 Q0 14717500 1 1.0000 run_14717500_title
-- 3 Q0 24530130 2 0.3664 run_14717500_title
-- 3 Q0 25643818 3 0.3477 run_14717500_title
-- 3 Q0 2739854 4 0.3379 run_14717500_title
-- 3 Q0 13777706 5 0.3284 run_14717500_title
+### Query ID: 1
+1 Q0 31715818 1 1.0000 run_31715818_both
+1 Q0 502797 2 0.5980 run_31715818_both
+1 Q0 6219790 3 0.5788 run_31715818_both
+1 Q0 28386343 4 0.5683 run_31715818_both
+1 Q0 10982689 5 0.5377 run_31715818_both
+1 Q0 20620012 6 0.5375 run_31715818_both
+1 Q0 12887068 7 0.5228 run_31715818_both
+1 Q0 11172205 8 0.5122 run_31715818_both
+1 Q0 17021845 9 0.5081 run_31715818_both
+1 Q0 3981613 10 0.5060 run_31715818_both
 
-#### Title + Full Text
-Query ID: 1
-- 1 Q0 31715818 1 1.0000 run_31715818_text
-- 1 Q0 502797 2 0.2538 run_31715818_text
-- 1 Q0 1848452 3 0.2374 run_31715818_text
-- 1 Q0 87430549 4 0.2306 run_31715818_text
-- 1 Q0 8891333 5 0.2251 run_31715818_text
+### Query ID: 3
+3 Q0 14717500 1 1.0000 run_14717500_both
+3 Q0 23389795 2 0.6373 run_14717500_both
+3 Q0 4378885 3 0.6335 run_14717500_both
+3 Q0 2485101 4 0.6205 run_14717500_both
+3 Q0 35329820 5 0.6068 run_14717500_both
+3 Q0 11532028 6 0.6014 run_14717500_both
+3 Q0 3222187 7 0.5987 run_14717500_both
+3 Q0 2739854 8 0.5958 run_14717500_both
+3 Q0 13940200 9 0.5950 run_14717500_both
+3 Q0 33387953 10 0.5913 run_14717500_both
 
-Query ID: 3
-- 3 Q0 14717500 1 0.9885 run_14717500_text
-- 3 Q0 23389795 2 0.3357 run_14717500_text
-- 3 Q0 2739854 3 0.3051 run_14717500_text
-- 3 Q0 2485101 4 0.2934 run_14717500_text
-- 3 Q0 15155862 5 0.2849 run_14717500_text
+###  **Discussion:** 
+- The Neural BERT-based model performs better than the Classic IR (TF-IDF) model in ranking relevant documents and assigning similarity scores. For both Query 1 and Query 3, the top-ranked document is the same in both models, meaning they both correctly identify the most relevant document. However, the Neural model assigns much higher similarity scores to the top-ranked results compared to TF-IDF. For example, in Query 1, the second-ranked document has a similarity score of 0.5980 in BERT, while it only has 0.2538 in TF-IDF. This pattern is also seen in Query 3, where the second document is ranked at 0.6373 in BERT versus 0.3357 in TF-IDF.
 
-**Discussion:** The results of the full-text queries always had higher scores at the same ranking however they would result in an almost completely different ranking with most entries in the top 10 from a title only query ranking significantly lower on a full-text query if the rank at all.
+- This means the NN is more confident in its rankings, and it also brings more relevant documents higher in the list. In contrast, TF-IDF assigns lower scores and sometimes ranks less relevant documents higher because it only relies on exact keyword matches, while BERT understands the meaning of words and context. Overall, BERT produces stronger retrieval results, giving more meaningful rankings compared to the basic keyword-matching approach of TF-IDF.
 
-- The results, saved in 2_sample_queries.txt, were generated using top_2_sample.py. In both title-only and title + full-text retrieval, the top-ranked document is always an exact match with a score of 1.0000. This makes sense because the query directly matches an existing document in the dataset.
-- However, the order of the remaining documents changes between the two methods. Title-only retrieval ranks documents based on how similar their titles are to the query, prioritizing those with closely matching titles. Title + full-text retrieval, on the other hand, considers the entire content, which can cause documents with relevant text (but different titles) to rank higher.
-- Title-only retrieval is more precise because it retrieves documents with strong title similarity, but it may miss relevant content that doesn’t have a matching title. Title + full-text retrieval improves recall by finding documents where the query terms appear anywhere in the text, but this can also lead to some less relevant documents ranking higher.
+- One of the key differences between the Neural BERT-based model and the Classic IR (TF-IDF) model is how they process text. BERT uses Byte Pair Encoding (BPE), which allows it to break words into smaller subword units and handle out-of-vocabulary words efficiently. This means BERT can understand complex words, variations, and even misspellings without needing pre-processing like stemming or tokenization. On the other hand, TF-IDF relies on simple tokenized words that are often stemmed (e.g., "running" becomes "run"), which removes important context. Since TF-IDF only looks at exact word matches, it struggles to understand the relationships between words or their deeper meanings.
+
+### Model 2: 
 
 ---
 
-## 7. Mean Average Precision (MAP) Score
+## 7. Mean Average Precision (MAP) and P@10 Scores
 
 ### Assignment 1 scores: 
 The Mean Average Precision (MAP) score was computed using trec_eval for different retrieval approaches:
 
-- Title-Only Retrieval → 0.9585
-- Title + Full Text Retrieval → 0.9585
-- Best Overall Run → 0.9707
-These results indicate that our retrieval system is highly effective at ranking relevant documents. The best run achieves 0.9707, showing strong precision in retrieving relevant results.
-
-Observations:
-- Both title-only and title + full-text retrieval achieve nearly identical MAP scores (0.9585), suggesting that adding full text does not significantly impact ranking effectiveness in this dataset.
-- The best run (0.9707) suggests some improvements were made, likely due to better ranking or query processing optimizations.
-- The high scores overall indicate that the model retrieves highly relevant documents early in the ranking process.
-
-✅ The MAP computation results can be found at: results/trec-map-result.png.
-
+- MAP → 0.9585
+- P@10 → 
 
 ### Assignment 2 scores: 
+
+
+Observations:
+
 
 ---
 
