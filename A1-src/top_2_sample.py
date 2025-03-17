@@ -1,16 +1,15 @@
 import os
 
-# results_title_path = "results/results_title_bert.txt"
-# results_text_path = "results/results_text_bert.txt"
-results_both_path = "results/results_both_bert.txt"
-output_path = "results/first_2_sample_queries.txt"
+results_title_path = "results/results_title.txt"
+results_text_path = "results/results_text.txt"
+output_path = "results/2_sample_queries.txt"
 
 # Reads the first 10 results for the first 2 queries from ythe results file
 def extract_top_10_results(file_path):
     extracted_results = {}
     
     if not os.path.exists(file_path):
-        print(f" Error: {file_path} not found.")
+        print(f"❌ Error: {file_path} not found.")
         return extracted_results
 
     with open(file_path, "r", encoding="utf-8") as f:
@@ -32,15 +31,18 @@ def extract_top_10_results(file_path):
 
     return extracted_results
 
-# title_results = extract_top_10_results(results_title_path)
-# text_results = extract_top_10_results(results_text_path)
-both_results = extract_top_10_results(results_both_path)
-
+title_results = extract_top_10_results(results_title_path)
+text_results = extract_top_10_results(results_text_path)
 
 with open(output_path, "w", encoding="utf-8") as f:
-    f.write("## Top 10 Results for First 2 Queries (Title and Text)\n\n")
-    for query_id, results in both_results.items():
+    f.write("## Top 10 Results for First 2 Queries (Title-Only Retrieval)\n\n")
+    for query_id, results in title_results.items():
         f.write(f"### Query ID: {query_id}\n")
         f.write("\n".join(results) + "\n\n")
 
-print(f" Extracted top 10 results for the first 2 queries into {output_path}")
+    f.write("## Top 10 Results for First 2 Queries (Title + Full Text Retrieval)\n\n")
+    for query_id, results in text_results.items():
+        f.write(f"### Query ID: {query_id}\n")
+        f.write("\n".join(results) + "\n\n")
+
+print(f"✅ Extracted top 10 results for the first 2 queries into {output_path}")
