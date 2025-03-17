@@ -6,7 +6,7 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from beir.retrieval.evaluation import EvaluateRetrieval
 
-corpus_path = "data/scifact/corpus.jsonl"
+corpus_path = "scifact/corpus.jsonl"
 
 corpus_dict_title, corpus_dict_text, corpus_dict_both = {}, {}, {}
 
@@ -22,7 +22,7 @@ with open(corpus_path, "r", encoding="utf-8") as f:
         corpus_dict_both[doc_id] = f"{title} {full_text}"
 
 # test queries
-test_queries_path = "data/scifact/qrels/test.tsv"
+test_queries_path = "scifact/qrels/test.tsv"
 df = pd.read_csv(test_queries_path, sep="\t", names=["query_id", "corpus_id", "score"], skiprows=1)
 
 df["query_id"] = df["query_id"].astype(str)
