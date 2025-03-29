@@ -149,6 +149,41 @@ Our final vocabulary consists of **30,980 unique tokens**, generated after token
 
 ### Model 2: 
 
+### Query ID: 1
+1 Q0 31715818 1 1.0000 run_31715818_both
+1 Q0 502797 2 0.7541 run_31715818_both
+1 Q0 15728433 3 0.7406 run_31715818_both
+1 Q0 20524091 4 0.6851 run_31715818_both
+1 Q0 226488 5 0.6789 run_31715818_both
+1 Q0 5567223 6 0.6691 run_31715818_both
+1 Q0 21387297 7 0.6618 run_31715818_both
+1 Q0 21676556 8 0.6581 run_31715818_both
+1 Q0 8891333 9 0.6551 run_31715818_both
+1 Q0 1848452 10 0.6548 run_31715818_both
+
+### Query ID: 3
+3 Q0 14717500 1 1.0000 run_14717500_both
+3 Q0 2485101 2 0.6501 run_14717500_both
+3 Q0 23389795 3 0.6140 run_14717500_both
+3 Q0 13956305 4 0.6105 run_14717500_both
+3 Q0 22067786 5 0.6048 run_14717500_both
+3 Q0 2739854 6 0.5972 run_14717500_both
+3 Q0 35329820 7 0.5939 run_14717500_both
+3 Q0 33669399 8 0.5798 run_14717500_both
+3 Q0 20471181 9 0.5784 run_14717500_both
+3 Q0 13717103 10 0.5751 run_14717500_both
+
+###  **Discussion:** 
+- In our experiments, the Universal Sentence Encoder (USE) model clearly outperformed the traditional TF-IDF method in ranking relevant documents. For both Query 1 and Query 3, all models TF-IDF, BERT, and USE correctly identified the most relevant document in the top spot. However, what stood out with USE was how much more confident it seemed in its rankings, giving higher similarity scores to the top documents compared to BERT and TF-IDF. For instance, in Query 1, the second ranked document got a score of 0.7541 in USE, while BERT only gave it 0.5980. Similarly, in Query 3, USE ranked the second document at 0.6501, while BERT assigned it 0.6373.
+  
+- We also saw that USE and BERT didn’t always agree on the lower ranked documents. This shows how differently the models handle relevance. USE looks at the overall meaning of a sentence, capturing the broader context, while BERT tries to balance context and structure. On the other hand, TF-IDF simply matches keywords, which can lead to less relevant documents being ranked higher. As a result, USE seemed to bring more relevant documents to the top, while TF-IDF sometimes got stuck on exact matches, even when they weren’t the most relevant.
+  
+- One of the biggest advantages of USE is its ability to understand the full meaning of a sentence, not just individual words. This helps it pull up relevant documents even if they don’t have the exact words from the query, which is something TF-IDF can’t do as well. For example, in Query 1, even documents that used different phrasing were still ranked highly because of their overall semantic relevance.
+  
+- The MAP score of 0.9743 for USE when considering both the title and full text is a solid improvement over its title only performance, and it also beats TF-IDF by a significant margin. This shows that using the full text gives USE more context to make better ranking decisions.
+In conclusion, USE is really strong when it comes to understanding the meaning behind sentences, and it outperforms traditional models like TF-IDF. By looking at the full context of a document, rather than just keywords, it delivers better results. It’s clear that USE is a powerful tool for improving document retrieval and search accuracy.
+
+
 ---
 
 ## 7. Mean Average Precision (MAP) and P@10 Scores
@@ -164,10 +199,10 @@ The Mean Average Precision (MAP) score was computed using trec_eval for differen
 - MAP → 
 - P@10 → 
 
-### Assignment 2 scores - Model 2 (name) : 
+### Assignment 2 scores - Model 2 (Universal Sentence Encoder (USE) ) : 
 
-- MAP → 
-- P@10 → 
+- MAP →  0.9743
+- P@10 → 0.1073
 
 Observations:
 
