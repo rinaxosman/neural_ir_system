@@ -202,7 +202,7 @@ The Mean Average Precision (MAP) score was computed using trec_eval for differen
 ### Assignment 2 scores - Model 2 (Universal Sentence Encoder (USE) ) : 
 
 - MAP →  0.9743
-- P@10 → 
+- P@10 → 0.1073
 
 Observations:
 
