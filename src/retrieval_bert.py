@@ -147,15 +147,15 @@ print(metrics_text)
 print("\n Title + Text:")
 print(metrics_both)
 
-os.makedirs("results", exist_ok=True)
+os.makedirs("m1-results", exist_ok=True)
 
-with open("results/results_title_bert.txt", "w", encoding="utf-8") as f:
+with open("m1-results/results_title_bert.txt", "w", encoding="utf-8") as f:
     f.write("\n".join(all_results_title) + "\n")
 
-with open("results/results_text_bert.txt", "w", encoding="utf-8") as f:
+with open("m1-results/results_text_bert.txt", "w", encoding="utf-8") as f:
     f.write("\n".join(all_results_text) + "\n")
 
-with open("results/results_both_bert.txt", "w", encoding="utf-8") as f:
+with open("m1-results/results_both_bert.txt", "w", encoding="utf-8") as f:
     f.write("\n".join(all_results_both) + "\n")
 
-print(f"\n Results saved to Results/")
+print(f"\n Results saved to m1-results/")

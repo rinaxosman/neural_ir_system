@@ -10,10 +10,10 @@ print("🔄 Loading Universal Sentence Encoder...")
 use_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 
 
-corpus_path = "/Users/fatimaghadbawi/Downloads/neural_ir_system-main/scifact/corpus.jsonl"
-test_queries_path = "/Users/fatimaghadbawi/Downloads/neural_ir_system-main/scifact/qrels/test.tsv"
+corpus_path = "scifact/corpus.jsonl"
+test_queries_path = "scifact/qrels/test.tsv"
 
-results_dir = "A2-results"
+results_dir = "m2-results"
 os.makedirs(results_dir, exist_ok=True) 
 
 results_title_path = os.path.join(results_dir, "results_title_use.txt")
