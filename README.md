@@ -83,6 +83,7 @@ NEURAL_IR_SYSTEM/
 ### How to Run:
 ```bash
 python src/retrieval_bert.py
+or python retrieval_bert.py (if in root folder)
 ```
 
 ### Output:
@@ -102,6 +103,7 @@ python src/retrieval_bert.py
 ### How to Run:
 ```bash
 python src/retrieval_use.py
+or python retrieval_use.py (if in root folder)
 ```
 
 ### Output:
@@ -238,4 +240,4 @@ pip install -r requirements.txt
 ## 🎯 Submission Notes
 
 - All result files are saved in the `m1-results/` and `m2-results/` folders.
-- `submission-a2.zip` includes necessary scripts, results, and README for reproduction. Only the results for title+text are included for simplicity, available in the root of the folder. 
+- `submission-a2.zip` includes necessary scripts, results, requirements, and README for reproduction. Only the results for title+text are included for simplicity, available in the root of the folder. 
