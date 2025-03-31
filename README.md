@@ -207,14 +207,20 @@ python src/retrieval_use.py
 ## 🧠 Discussion
 
 ### Model 1 (BERT)
-The Neural BERT-based model performs better than the Classic IR (TF-IDF) model in ranking relevant documents and assigning similarity scores. It is especially effective at understanding the context of words through subword tokenization (BPE), making it robust to variations and misspellings. For both Query 1 and 3, BERT placed the correct document at rank 1 and showed high semantic confidence in the rest of the top 10 rankings. 
+- The Neural BERT-based model performed better than the Classic IR (TF-IDF) method when it came to ranking relevant documents and assigning similarity scores. For both Query 1 and Query 3, the top-ranked document was the same in both models, which means they both managed to correctly identify the most relevant one. But BERT gave higher similarity scores to the top-ranked results than TF-IDF did. Like, in Query 1, the second-ranked document had a similarity score of 0.5980 in BERT, while it only got 0.2538 in TF-IDF. The same thing happened in Query 3 where the second document was scored 0.6373 by BERT and 0.3357 by TF-IDF.
 
-However, while BERT understands context well, its scores for MAP and P@10 were noticeably lower than USE’s, indicating room for improvement in ranking across the full top 10.
+- This shows that the neural model is more confident in its rankings, and it pushes the relevant documents higher up the list. TF iDF sometimes ranks less useful documents higher just cause it depends on matching the exact keywords. Meanwhile, BERT can understand the meaning of the query, not just the words in it. So overall, BERT gives better rankings and is more useful in retrieving what the user actually meant.
+
+- 1 key difference between BERT and TF-IDF is how they handle the text. BERT uses something called Byte Pair Encoding (BPE), which breaks down words into smaller parts so it can understand rare words or even typos. That helps it a lot. TF-IDF on the other hand just chops words down through stemming or tokenization, like turning "running" into "run", and that removes important context. Since TF-IDF doesn’t get word relationships or deeper meaning, it ends up being less accurate.
 
 ### Model 2 (USE)
-USE significantly outperformed TF-IDF and even BERT in terms of MAP and P@10. It is better at capturing the full semantic meaning of a sentence, which allowed it to return highly relevant documents even when the wording differed from the query. USE ranked the correct documents at the top, with stronger confidence and overall better precision across the top 10.
+- From our tests, the Universal Sentence Encoder (USE) model did even better than TF-IDF and in some ways even better than BERT. Just like the others, it ranked the top document correctly for both Query 1 and Query 3. But what stood out is how confident USE seemed in its rankings. For example, in Query 1, the second document got a 0.7541 score in USE, compared to only 0.5980 in BERT. In Query 3, USE gave the second one 0.6501 while BERT had 0.6373.
 
-Its architecture is simpler and faster than BERT while still being extremely effective in semantic understanding — making it a great baseline for sentence-level similarity.
+- What’s also interesting is that USE and BERT didnt always agree on the bottom documents. That shows how differently they interpret what’s relevant. USE looks at the entire meaning of a sentence, while BERT tries to juggle meaning and sentence structure. TF-IDF just matches words, so it ends up missing the point sometimes and ranks unrelated stuff higher than it should.
+
+- A good thing about USE is that it doesnt need exact wording to understand the query. It picks up the meaning behind what you're saying. So if a document phrases something differently than the query, USE still finds it useful. Like in Query 1, some documents with different wording were still ranked high because USE got the meaning right.
+
+- The MAP score of 0.9743 for USE when using both the title and full text proves that giving more context helps a lot. It's a big step up from title only, and it beats TF-IDF by a lot. Overall, USE is super strong when it comes to understanding full sentence meaning. It’s way more effective than traditional models and gives way better search results. Definitely a solid model for improving document retrieval.
 
 ### BERT vs. USE Summary
 
@@ -223,7 +229,7 @@ Its architecture is simpler and faster than BERT while still being extremely eff
 | MAP@100    | 0.61009           | 0.9743           |
 | P@10       | 0.066             | 0.1073           |
 
-USE outperformed BERT on both metrics. While BERT is more powerful on large datasets and fine-tuning tasks, USE provides faster inference and betterssemantic matching for smaller retrieval problems like SciFact.
+USE outperformed BERT on both MAP and P@10. Even though BERT is stronger in some large scale or fine tuned settings, USE had faster results and better semantic matching on this task.
 
 ---
 
