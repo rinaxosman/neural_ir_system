@@ -135,9 +135,13 @@ if not all([
 
 # evaluate results
 evaluator = EvaluateRetrieval()
-metrics_title = evaluator.evaluate(qrels=qrels, results=retrieved_results_title, k_values=[1, 10])
-metrics_text = evaluator.evaluate(qrels=qrels, results=retrieved_results_text, k_values=[1, 10])
-metrics_both = evaluator.evaluate(qrels=qrels, results=retrieved_results_both, k_values=[1, 10])
+# metrics_title = evaluator.evaluate(qrels=qrels, results=retrieved_results_title, k_values=[1, 10])
+# metrics_text = evaluator.evaluate(qrels=qrels, results=retrieved_results_text, k_values=[1, 10])
+# metrics_both = evaluator.evaluate(qrels=qrels, results=retrieved_results_both, k_values=[1, 10])
+
+metrics_title = evaluator.evaluate(qrels=qrels, results=retrieved_results_title, k_values=[10, 100])
+metrics_text = evaluator.evaluate(qrels=qrels, results=retrieved_results_text, k_values=[10, 100])
+metrics_both = evaluator.evaluate(qrels=qrels, results=retrieved_results_both, k_values=[10, 100])
 
 print("\n **Evaluation Results:**")
 print("\n Title Only:")

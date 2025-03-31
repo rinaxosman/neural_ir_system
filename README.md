@@ -80,38 +80,41 @@ NEURAL_IR_SYSTEM/
 - Computes evaluation metrics like NDCG, MAP, Recall, and Precision using BEIR's `EvaluateRetrieval`.
 - Saves results into `m1-results/`.
 
-### How to Run:
+---
+
+## 💻 How to Run the Program
+
+### 1. Install Dependencies
+
+Ensure you have Python 3.8+ installed.
+
+```bash
+pip install -r requirements.txt
+```
+
+Dependencies include:
+- `sentence-transformers`
+- `tensorflow` and `tensorflow-hub`
+- `sklearn`, `numpy`, `pandas`
+- `pytrec_eval`, `beir`, etc.
+
+### 2. Run the Models
+
+To run Model 1 (BERT):
+
 ```bash
 python src/retrieval_bert.py
-or python retrieval_bert.py (if in root folder)
 ```
 
-### Output:
-- Files in `m1-results/`
-- Evaluation metrics printed to terminal.
+To run Model 2 (USE):
 
----
-
-## 🌐 Model 2: Universal Sentence Encoder (`retrieval_use.py`)
-
-### Functionality:
-- Loads and encodes the SciFact corpus using TensorFlow Hub's Universal Sentence Encoder (USE).
-- Computes document similarity via cosine similarity.
-- Saves output in TREC format for further analysis.
-- Does not compute evaluation metrics by default.
-
-### How to Run:
 ```bash
 python src/retrieval_use.py
-or python retrieval_use.py (if in root folder)
 ```
-
-### Output:
-- Files in `m2-results/`
 
 ---
 
-## 🧮 Algorithms and Optimizations
+## Algorithms and Optimizations
 
 ### Sentence-BERT:
 - **Encoder**: `msmarco-distilbert-base-v3`
@@ -127,32 +130,21 @@ or python retrieval_use.py (if in root folder)
 
 ---
 
-## 📊 Evaluation Metrics Summary
+## 📊 Evaluation Metrics Summary (MAP and P@10 Only)
 
-### Model 1 (BERT - `msmarco-distilbert-base-v3`)
+### Model 1 (BERT)
 ```
-Title Only:
-{'NDCG@1': 0.67333, 'NDCG@10': 0.67155}, 
-{'MAP@1': 0.63661, 'MAP@10': 0.65323}, 
-{'Recall@1': 0.63661, 'Recall@10': 0.70061}, 
-{'P@1': 0.67333, 'P@10': 0.07467}
-
-Text Only:
-{'NDCG@1': 0.65333, 'NDCG@10': 0.65107}, 
-{'MAP@1': 0.623, 'MAP@10': 0.63514}, 
-{'Recall@1': 0.623, 'Recall@10': 0.6755}, 
-{'P@1': 0.65333, 'P@10': 0.07167}
-
-Title + Text:
-{'NDCG@1': 0.63, 'NDCG@10': 0.61121}, 
-{'MAP@1': 0.59483, 'MAP@10': 0.59962}, 
-{'Recall@1': 0.59483, 'Recall@10': 0.61983}, 
-{'P@1': 0.63, 'P@10': 0.066}
+- Title + Text:
+  - MAP@100: 0.61009
+  - P@10: 0.066
 ```
 
 ### Model 2 (USE)
-
-*Insert results here*
+```
+- Title + Text:
+  - MAP: 0.9743
+  - P@10: 0.1073
+```
 
 ---
 
@@ -221,19 +213,26 @@ Title + Text:
 
 ### Observations:
 
-- **Title-only**: ...
-- **Title+Text**: ...
-- **USE's performance**: ...
+## 🧠 Discussion
 
----
+### Model 1 (BERT)
+The Neural BERT-based model performs better than the Classic IR (TF-IDF) model in ranking relevant documents and assigning similarity scores. It is especially effective at understanding the context of words through subword tokenization (BPE), making it robust to variations and misspellings. For both Query 1 and 3, BERT placed the correct document at rank 1 and showed high semantic confidence in the rest of the top 10 rankings. 
 
-## ✅ Requirements
+However, while BERT understands context well, its scores for MAP and P@10 were noticeably lower than USE’s, indicating room for improvement in ranking across the full top 10.
 
-Install dependencies using:
+### Model 2 (USE)
+USE significantly outperformed TF-IDF and even BERT in terms of MAP and P@10. It is better at capturing the full semantic meaning of a sentence, which allowed it to return highly relevant documents even when the wording differed from the query. USE ranked the correct documents at the top, with stronger confidence and overall better precision across the top 10.
 
-```bash
-pip install -r requirements.txt
-```
+Its architecture is simpler and faster than BERT while still being extremely effective in semantic understanding — making it a great baseline for sentence-level similarity.
+
+### BERT vs. USE Summary
+
+| Metric     | BERT (Title+Text) | USE (Title+Text) |
+|------------|-------------------|------------------|
+| MAP@100    | 0.61009           | 0.9743           |
+| P@10       | 0.066             | 0.1073           |
+
+USE outperformed BERT on both metrics. While BERT is more powerful on large datasets and fine-tuning tasks, USE provides faster inference and betterssemantic matching for smaller retrieval problems like SciFact.
 
 ---
 
