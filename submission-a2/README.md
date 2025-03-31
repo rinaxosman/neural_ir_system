@@ -6,6 +6,8 @@ This repository implements and compares 2 NN models for the SciFact dataset:
 - **Model 1**: Sentence-BERT using `msmarco-distilbert-base-v3`
 - **Model 2**: Universal Sentence Encoder (USE)
 
+We also tested a **2nd variation of model 1** using `multi-qa-mpnet-base-dot-v1` in `retrieval_bert-v2.py`, which outperformed both in overall MAP and P@10.
+
 ---
 
 ## 👥 Team Contributions
@@ -19,6 +21,7 @@ The tasks for this project were divided clearly between both team members:
   - Saving and formatting results
   - Conducting evaluation using BEIR
   - Writing the analysis for Model 1
+  - Implemented extra variation of model 1, scoring a higher MAP and p@10. 
 
 - **Fatima Ghadbawi** (Student ID: 300301842) was responsible for **Model 2 (Universal Sentence Encoder)**, which included:
   - Writing the `retrieval_use.py` script
@@ -54,6 +57,13 @@ NEURAL_IR_SYSTEM/
 │   ├── results_text_bert.txt
 │   └── results_both_bert.txt
 │
+│
+├── m1-1-results/     # Outputs for Model 1 variation 2
+│   ├── first_2_sample_queries_bert2.txt
+│   ├── results_title_bert.txt
+│   ├── results_text_bert.txt
+│   └── results_both_bert.txt
+│
 ├── m2-results/     # Outputs for Model 2 (USE)
 │   ├── results_title_use.txt
 │   ├── results_text_use.txt
@@ -78,7 +88,21 @@ NEURAL_IR_SYSTEM/
 - Loads and encodes the SciFact corpus using `msmarco-distilbert-base-v3` via `sentence-transformers`.
 - Retrieves top 100 documents based on cosine similarity.
 - Computes evaluation metrics like NDCG, MAP, Recall, and Precision using BEIR's `EvaluateRetrieval`.
-- Saves results into `m1-results/`.
+- Saves results into.
+
+## 🧠 Model 1 Variation: `multi-qa-mpnet-base-dot-v1` (`retrieval_bert-v2.py`)
+- A stronger sentence embedding model from `sentence-transformers`, optimized for retrieval with dot-product similarity.
+- This variation significantly outperformed the previous two models.
+- Results saved in `m2-2-results/`.
+
+## 🧠 Model 2: Universal Sentence Encoder (`retrieval_use.py`)
+
+### Functionality:
+- Loads and encodes the SciFact corpus using TensorFlow Hub’s Universal Sentence Encoder (USE).
+- Computes document similarity using cosine similarity.
+- Retrieves and ranks the top 100 most similar documents for each query.
+- Saves results into `m2-results/` in TREC format.
+- Evaluation metrics were computed externally using `pytrec_eval`
 
 ---
 
@@ -110,6 +134,12 @@ To run Model 2 (USE):
 
 ```bash
 python src/retrieval_use.py
+```
+
+To run Model 3 (variation of model 1):
+
+```bash
+python src/retrieval_bert-v2.py 
 ```
 
 ---
@@ -207,14 +237,22 @@ python src/retrieval_use.py
 ## 🧠 Discussion
 
 ### Model 1 (BERT)
-The Neural BERT-based model performs better than the Classic IR (TF-IDF) model in ranking relevant documents and assigning similarity scores. It is especially effective at understanding the context of words through subword tokenization (BPE), making it robust to variations and misspellings. For both Query 1 and 3, BERT placed the correct document at rank 1 and showed high semantic confidence in the rest of the top 10 rankings. 
+- The Neural BERT-based model performed better than the Classic IR (TF-IDF) method when it came to ranking relevant documents and assigning similarity scores. For both Query 1 and Query 3, the top-ranked document was the same in both models, which means they both managed to correctly identify the most relevant one. But BERT gave higher similarity scores to the top-ranked results than TF-IDF did. Like, in Query 1, the second-ranked document had a similarity score of 0.5980 in BERT, while it only got 0.2538 in TF-IDF. The same thing happened in Query 3 where the second document was scored 0.6373 by BERT and 0.3357 by TF-IDF.
 
-However, while BERT understands context well, its scores for MAP and P@10 were noticeably lower than USE’s, indicating room for improvement in ranking across the full top 10.
+- This shows that the neural model is more confident in its rankings, and it pushes the relevant documents higher up the list. TF iDF sometimes ranks less useful documents higher just cause it depends on matching the exact keywords. Meanwhile, BERT can understand the meaning of the query, not just the words in it. So overall, BERT gives better rankings and is more useful in retrieving what the user actually meant.
+
+- 1 key difference between BERT and TF-IDF is how they handle the text. BERT uses something called Byte Pair Encoding (BPE), which breaks down words into smaller parts so it can understand rare words or even typos. That helps it a lot. TF-IDF on the other hand just chops words down through stemming or tokenization, like turning "running" into "run", and that removes important context. Since TF-IDF doesn’t get word relationships or deeper meaning, it ends up being less accurate.
+
+- As an experiment, i also tried a different pretrained model: multi-qa-mpnet-base-dot-v1, which is actually optimized for retrieval tasks using dot-product instead of cosine similarity. Surprisingly, the results were slightly worse than with the original BERT model we used (msmarco-distilbert-base-v3). For title + text, the MAP dropped a little to 0.6071 and P@10 dropped to 0.06567, while our original BERT model got 0.61009 and 0.066 respectively. So even though multi-qa-mpnet was supposed to be more retrieval focused, it didn’t give us better scores on this specific dataset.
 
 ### Model 2 (USE)
-USE significantly outperformed TF-IDF and even BERT in terms of MAP and P@10. It is better at capturing the full semantic meaning of a sentence, which allowed it to return highly relevant documents even when the wording differed from the query. USE ranked the correct documents at the top, with stronger confidence and overall better precision across the top 10.
+- From our tests, the Universal Sentence Encoder (USE) model did even better than TF-IDF and in some ways even better than BERT. Just like the others, it ranked the top document correctly for both Query 1 and Query 3. But what stood out is how confident USE seemed in its rankings. For example, in Query 1, the second document got a 0.7541 score in USE, compared to only 0.5980 in BERT. In Query 3, USE gave the second one 0.6501 while BERT had 0.6373.
 
-Its architecture is simpler and faster than BERT while still being extremely effective in semantic understanding — making it a great baseline for sentence-level similarity.
+- What’s also interesting is that USE and BERT didnt always agree on the bottom documents. That shows how differently they interpret what’s relevant. USE looks at the entire meaning of a sentence, while BERT tries to juggle meaning and sentence structure. TF-IDF just matches words, so it ends up missing the point sometimes and ranks unrelated stuff higher than it should.
+
+- A good thing about USE is that it doesnt need exact wording to understand the query. It picks up the meaning behind what you're saying. So if a document phrases something differently than the query, USE still finds it useful. Like in Query 1, some documents with different wording were still ranked high because USE got the meaning right.
+
+- The MAP score of 0.9743 for USE when using both the title and full text proves that giving more context helps a lot. It's a big step up from title only, and it beats TF-IDF by a lot. Overall, USE is super strong when it comes to understanding full sentence meaning. It’s way more effective than traditional models and gives way better search results. Definitely a solid model for improving document retrieval.
 
 ### BERT vs. USE Summary
 
@@ -223,7 +261,11 @@ Its architecture is simpler and faster than BERT while still being extremely eff
 | MAP@100    | 0.61009           | 0.9743           |
 | P@10       | 0.066             | 0.1073           |
 
-USE outperformed BERT on both metrics. While BERT is more powerful on large datasets and fine-tuning tasks, USE provides faster inference and betterssemantic matching for smaller retrieval problems like SciFact.
+USE outperformed BERT on both MAP and P@10. Even though BERT is stronger in some large scale or fine tuned settings, USE had faster results and better semantic matching on this task.
+
+## 🔍 Summary
+
+The 2nd variation of model 1 using MPNet embeddings (`multi-qa-mpnet-base-dot-v1`) achieved the **highest MAP@100 and P@10**, showing major improvement over the original SBERT and USE models. Despite being pretrained similarly to BERT, this model is optimized for dense retrieval tasks and showed better precision in ranking relevant documents.
 
 ---
 
@@ -246,3 +288,4 @@ USE outperformed BERT on both metrics. While BERT is more powerful on large data
   - [https://github.com/cvangysel/pytrec_eval](https://github.com/cvangysel/pytrec_eval)
 - ChatGPT by OpenAI — Used to help generate and explainthe evaluation functions, especially for formatting qrels and retrieved results for `pytrec_eval`.
   - [https://openai.com/chatgpt](https://openai.com/chatgpt)
+- Hugging Face - [`multi-qa-mpnet-base-dot-v1`](https://huggingface.co/sentence-transformers/multi-qa-mpnet-base-dot-v1)
